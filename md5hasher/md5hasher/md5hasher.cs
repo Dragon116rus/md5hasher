@@ -12,7 +12,7 @@ namespace md5hasher
        public string hash(string sourcePhrase)
         {
             firstStep(sourcePhrase);
-            // secondStep(sourcePhrase);
+            secondStep(sourcePhrase);
             // thirdStep(sourcePhrase);
             // fourhStep(sourcePhrase);
             return sourcePhrase;
@@ -48,6 +48,24 @@ namespace md5hasher
         {
             sourceBytes[position] = 0x80;
         }
-        #endregion 
+        #endregion
+        #region secondStep
+        private void secondStep(string sourcePhrase)
+        {
+            Int64 lengthOfPhrase = sourcePhrase.Length;
+            int startedPositionToInsert = sourceBytes.Length - 8;
+            byte[] lengthInBytes = getLengthInBytes(lengthOfPhrase);
+            System.Buffer.BlockCopy(lengthInBytes, 0, sourceBytes, startedPositionToInsert, lengthInBytes.Length);
+        }
+        private byte[] getLengthInBytes(Int64 lengthOfPhrase)
+        {
+            byte[] lengthInBytes = BitConverter.GetBytes(lengthOfPhrase);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(lengthInBytes);
+            }
+            return lengthInBytes;
+        }
+        #endregion
     }
 }
