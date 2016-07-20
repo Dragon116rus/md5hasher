@@ -12,7 +12,7 @@ namespace md5hasher
         {
             string sourcePhrase = Console.ReadLine();
             Md5hasher md5hasher = new Md5hasher();
-            string result = md5hasher().hash(sourcePhrase);
+            string result = md5hasher.hash(sourcePhrase);
             Console.WriteLine(result);
         }
     }
