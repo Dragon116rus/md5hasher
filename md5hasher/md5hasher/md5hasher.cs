@@ -53,7 +53,7 @@ namespace md5hasher
         private void secondStep(string sourcePhrase)
         {
             uint lengthOfPhraseInBits =(uint) sourcePhrase.Length*sizeof(char)*8;
-            uint startedPositionToInsert = sourceBytes.Length - 8;
+            int startedPositionToInsert = sourceBytes.Length - 8;
             byte[] lengthInBytes = getLengthInBytes(lengthOfPhraseInBits);
             System.Buffer.BlockCopy(lengthInBytes, 0, sourceBytes, startedPositionToInsert, lengthInBytes.Length);
         }
@@ -138,7 +138,7 @@ namespace md5hasher
 
             }
         }
-        private uint functionForStage1(int a, uint b , uint c , uint d)
+        private uint functionForStage1(uint a, uint b , uint c , uint d,)
         {
             return b + ((a + funF(b, c, d) + X[k] + T[i]) <<< s);
         }
