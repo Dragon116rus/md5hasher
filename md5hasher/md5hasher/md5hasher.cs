@@ -213,38 +213,8 @@ namespace md5hasher
             Buffer.BlockCopy(cInBytes, 0, answerInBytes, 8, cInBytes.Length);
             Buffer.BlockCopy(dInBytes, 0, answerInBytes, 12, dInBytes.Length);
 
-            StringBuilder answer = new StringBuilder();
-            foreach (byte b in answerInBytes)
-            {
-                answer.Append(getStringImage(b));
-            }
-            return answer.ToString();
-        }
-        private string getStringImage(byte b)
-        {
-            int first = b / 16;
-            int second = b % 16;
-            string answer = getHexDigit(first) + getHexDigit(second);
-            return answer;
-        }
-        private string getHexDigit(int a)
-        {
-            if (a < 10)
-                return a.ToString();
-
-            if (a == 10)
-                return "A";
-            if (a == 11)
-                return "B";
-            if (a == 12)
-                return "C";
-            if (a == 13)
-                return "D";
-            if (a == 14)
-                return "E";
-            if (a == 15)
-                return "F";
-            return "?";
+            return BitConverter.ToString(answerInBytes);
+           
         }
         #endregion
     }
