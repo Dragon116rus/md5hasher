@@ -8,8 +8,8 @@ namespace md5hasher
 {
     class Md5hasher
     {
-        byte[] sourceBytes;
-        public string hash(string sourcePhrase)
+        byte[] dataToHandle;
+        public string hash(byte[] sourcePhrase)
         {
             firstStep(sourcePhrase);
             secondStep(sourcePhrase);
@@ -17,25 +17,19 @@ namespace md5hasher
             return result;
         }
         #region firstStep
-        private void firstStep(string sourcePhrase)
+        private void firstStep(byte[] sourcePhrase)
         {
-            byte[] intermediate = toByteArray(sourcePhrase);
-            sourceBytes = new byte[getSourceBytesLength(sourcePhrase)];
-            copyIntermediateInSource(intermediate, sourceBytes);
-            insertSolitaryByte(sourceBytes, intermediate.Length);
+            dataToHandle = new byte[getDataToHandleLength(sourcePhrase)];
+            copyIntermediateInSource(sourcePhrase, dataToHandle);
+            insertSolitaryByte(dataToHandle, sourcePhrase.Length);
         }
-        private byte[] toByteArray(string phrase)
+      
+        private uint getDataToHandleLength(byte[] phrase)
         {
-            byte[] bytes = new byte[phrase.Length * sizeof(char)];
-            System.Buffer.BlockCopy(phrase.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
-        }
-        private uint getSourceBytesLength(string phrase)
-        {
-            uint result = 512 + 448;
+            uint result = (512 + 448)/8;
             while (result <= phrase.Length * sizeof(char) + 1)
             {
-                result += 512;
+                result += 512/8;
             }
             return result;
         }
@@ -52,9 +46,9 @@ namespace md5hasher
         private void secondStep(string sourcePhrase)
         {
             uint lengthOfPhraseInBits = (uint)sourcePhrase.Length * sizeof(char) * 8;
-            int startedPositionToInsert = sourceBytes.Length - 8;
+            int startedPositionToInsert = dataToHandle.Length - 8;
             byte[] lengthInBytes = getLengthInBytes(lengthOfPhraseInBits);
-            System.Buffer.BlockCopy(lengthInBytes, 0, sourceBytes, startedPositionToInsert, lengthInBytes.Length);
+            System.Buffer.BlockCopy(lengthInBytes, 0, dataToHandle, startedPositionToInsert, lengthInBytes.Length);
         }
         private byte[] getLengthInBytes(uint lengthOfPhrase)
         {
@@ -90,6 +84,7 @@ namespace md5hasher
             0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
             0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
         };
+        #region functions
         uint funF(uint x, uint y, uint z)
         {
             return (x | y) & (~x | z);
@@ -106,6 +101,7 @@ namespace md5hasher
         {
             return y ^ ((~z) & x);
         }
+        #endregion
         #endregion
         #region fourthStep
         private string fourthStep()
@@ -131,7 +127,7 @@ namespace md5hasher
         }
         private int getCountOfIteration()
         {
-            return (sourceBytes.Length * 8) / 512;
+            return (dataToHandle.Length * 8) / 512;
         }
         private uint[] blockInAnArray(int iteration)
         {
@@ -139,7 +135,7 @@ namespace md5hasher
             int startPosition = (iteration * 512) / 8;
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = BitConverter.ToUInt32(sourceBytes, startPosition);
+                array[i] = BitConverter.ToUInt32(dataToHandle, startPosition);
                 startPosition++;
             }
             return array;
