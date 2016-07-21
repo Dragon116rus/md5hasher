@@ -53,9 +53,9 @@ namespace md5hasher
         #region secondStep
         private void secondStep(string sourcePhrase)
         {
-            Int64 lengthOfPhrase = sourcePhrase.Length;
+            Int64 lengthOfPhraseInBits = sourcePhrase.Length*sizeof(char)*8;
             int startedPositionToInsert = sourceBytes.Length - 8;
-            byte[] lengthInBytes = getLengthInBytes(lengthOfPhrase);
+            byte[] lengthInBytes = getLengthInBytes(lengthOfPhraseInBits);
             System.Buffer.BlockCopy(lengthInBytes, 0, sourceBytes, startedPositionToInsert, lengthInBytes.Length);
         }
         private byte[] getLengthInBytes(Int64 lengthOfPhrase)
