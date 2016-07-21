@@ -71,12 +71,6 @@ namespace md5hasher
              wordB = 0xefcdab89,
              wordC = 0x98badcfe,
              wordD = 0x10325476;
-        uint[] s = {
-            7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22 ,
-            5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
-            4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
-            6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21
-        };
         uint[] K =
         {
             0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
@@ -213,8 +207,7 @@ namespace md5hasher
             Buffer.BlockCopy(cInBytes, 0, answerInBytes, 8, cInBytes.Length);
             Buffer.BlockCopy(dInBytes, 0, answerInBytes, 12, dInBytes.Length);
 
-            return BitConverter.ToString(answerInBytes);
-           
+            return BitConverter.ToString(answerInBytes);           
         }
         #endregion
     }
