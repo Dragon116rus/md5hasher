@@ -13,8 +13,7 @@ namespace md5hasher
         {
             firstStep(sourcePhrase);
             secondStep(sourcePhrase);
-            // thirdStep();
-            // fourhStep();
+            // fourthStep();
 
             return sourcePhrase;
         }
@@ -32,9 +31,9 @@ namespace md5hasher
             System.Buffer.BlockCopy(phrase.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
-        private int getSourceBytesLength(string phrase)
+        private uint getSourceBytesLength(string phrase)
         {
-            int result = 512 + 448;
+            uint result = 512 + 448;
             while (result <= phrase.Length * sizeof(char) + 1)
             {
                 result += 512;
@@ -53,12 +52,12 @@ namespace md5hasher
         #region secondStep
         private void secondStep(string sourcePhrase)
         {
-            Int64 lengthOfPhraseInBits = sourcePhrase.Length*sizeof(char)*8;
-            int startedPositionToInsert = sourceBytes.Length - 8;
+            uint lengthOfPhraseInBits =(uint) sourcePhrase.Length*sizeof(char)*8;
+            uint startedPositionToInsert = sourceBytes.Length - 8;
             byte[] lengthInBytes = getLengthInBytes(lengthOfPhraseInBits);
             System.Buffer.BlockCopy(lengthInBytes, 0, sourceBytes, startedPositionToInsert, lengthInBytes.Length);
         }
-        private byte[] getLengthInBytes(Int64 lengthOfPhrase)
+        private byte[] getLengthInBytes(uint lengthOfPhrase)
         {
             byte[] lengthInBytes = BitConverter.GetBytes(lengthOfPhrase);
             if (BitConverter.IsLittleEndian)
@@ -69,17 +68,17 @@ namespace md5hasher
         }
         #endregion
         #region thirdStep
-        Int64 wordA = 0x67452301,
+        uint wordA = 0x67452301,
               wordB = 0xefcdab89,
               wordC = 0x98badcfe,
               wordD = 0x10325476;
-        Int64[] s = {
+        uint[] s = {
             7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22 ,
             5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
             4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
             6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21
         };
-        Int64[] K =
+        uint[] K =
         {
             0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
             0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -98,21 +97,50 @@ namespace md5hasher
             0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
             0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
         };
-        Int32 funF(Int32 x, Int32 y, Int32 z)
+        uint funF(uint x, uint y, uint z)
         {
             return (x | y) & (~x | z);
         }
-        Int32 funG(Int32 x, Int32 y, Int32 z)
+        uint funG(uint x, uint y, uint z)
         {
             return (x | z) & (~z | y);
         }
-        Int32 funH(Int32 x, Int32 y, Int32 z)
+        uint funH(uint x, uint y, uint z)
         {
             return x ^ y ^ z;
         }
-        Int32 funI(Int32 x, Int32 y, Int32 z)
+        uint funI(uint x, uint y, uint z)
         {
             return y ^ ((~z) & x);
+        }
+        #endregion
+        #region fourthStep
+        private void fourthStep()
+        {
+            for (int iteration = 0; iteration < getCountOfIteration(); iteration++ )
+            {
+                uint wordAA = wordA;
+                uint wordBB = wordB;
+                uint wordCC = wordC;
+                uint wordDD = wordD;
+                
+            }
+            
+        }
+        private int getCountOfIteration()
+        {
+            return (sourceBytes.Length * 8) / 512;
+        }
+        private void stage1(ref uint wordAA, ref uint wordBB,ref uint wordCC, ref uint wordDD)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+
+            }
+        }
+        private uint functionForStage1(int a, uint b , uint c , uint d)
+        {
+            return b + ((a + funF(b, c, d) + X[k] + T[i]) <<< s);
         }
         #endregion
     }
